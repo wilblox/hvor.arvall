@@ -1,17 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Årvoll</title>
+    <title>årvoll</title>
 </head>
-<body>
-    <button>
-        click
-    </button>
-</body>
-<script>
-    document.querySelector("button").addEventListener.
 
+<body>
+
+    <img src="hvor.årvoll.png" />
+
+    <p>
+        hei
+    </p>
+</body>
+<style>
+    button {
+        color: rgb(16, 187, 164);
+        transition: all 1s ease-out;
+        position: absolute;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+</style>
+<script>
+    function movemouse(e) {
+        console.error(e.clientX, e.clientY)
+        document.querySelector("button").style.top = e.clientY + "px"
+        document.querySelector("button").style.left = e.clientX + "px"
+    }
+    document.addEventListener("mousemove", movemouse)
+    function sigmaohio() {
+        document.querySelector("button").style.scale = "400%"
+    }
+    document.querySelector("button").addEventListener("click", sigmaohio)
+</script>
 
 </html>
