@@ -10,41 +10,24 @@
 <body>
 
     <img src="hvor.årvoll.png" />
-    <title>
-        #myTextbox
-    </title>
+
+    <button>
+        pin_point
+    </button>
 </body>
 <style>
-    #myTextbox {
-      position: absolute; /* to position it somewhere */
-      left: 100px;
-      top: 150px;
-      width: 200px;
-      height: 30px;
-    }
-
     button {
         color: rgb(16, 187, 164);
-        transition: all 1s ease-out;
+        transition: all 5s ease-out;
         position: absolute;
     }
-
+    
     img {
         width: 100%;
         height: auto;
     }
 </style>
 <script>
-    const textbox = document.getElementById('myTextbox');
-
-    function updatePosition() {
-        const rect = textbox.getBoundingClientRect();
-        // To get coordinates relative to the document, add scroll offsets
-        const x = rect.left + window.scrollX;
-        const y = rect.top + window.scrollY;
-        textbox.value = `X: ${Math.round(x)}, Y: ${Math.round(y)}`;
-    }
-    updatePosition();
     function movemouse(e) {
         console.error(e.clientX, e.clientY)
         document.querySelector("button").style.top = e.clientY + "px"
@@ -52,7 +35,7 @@
     }
     document.addEventListener("mousemove", movemouse)
     function sigmaohio() {
-        document.querySelector("button").style.scale = "400%"
+        document.querySelector("button").style.scale = "200%"
     }
     document.querySelector("button").addEventListener("click", sigmaohio)
 </script>
