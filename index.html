@@ -8,35 +8,30 @@
 </head>
 
 <body>
-
-    <img src="hvor.årvoll.png" />
-
-    <button>
-        pin_point
-    </button>
+    <img id="HER.png" src="hvor.årvoll.png" />
 </body>
 <style>
-    button {
-        color: rgb(16, 187, 164);
-        transition: all 1ms ease-out;
+    #HER.png {
         position: absolute;
-    }
-    
-    img {
-        width: 100%;
+        top: 20px;
+        left: 20px;
+        width: 200px;
         height: auto;
+        transition: transform 0.2s;
     }
 </style>
 <script>
-    function movemouse(e) {
-        console.error(e.clientX, e.clientY)
-        document.querySelector("button").style.top = e.clientY + "px"
-        document.querySelector("button").style.left = e.clientX + "px"
-    }
-    document.addEventListener("mousemove", movemouse)
-    function sigmaohio() {
-        document.querySelector("button").style.scale = "200%"
-    }
-    document.querySelector("button").addEventListener("click", sigmaohio)
+    const img = document.getElementById("HER.png");
+    document.addEventListener("mousemove", function (e) {
+        img.style.left = e.clientX + "px";
+        img.style.top = e.clientY + "px";
+    });
+    img.appeventlistener("click", function () {
+        img.style.transform = "scale(1.2)";
+        setTimeout(() => img.style.transform = "scale(1)", 300);
+    });
+
+    document.querySelector("HER.png").addEventListener("click", sigmaohio)
 </script>
+
 </html>
