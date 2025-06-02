@@ -5,38 +5,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>årvoll</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 
+<button id="share-btn">Share Map Screenshot</button>
+
+<div id="map-container" style="position:relative; display:inline-block;">
+    <img draggable="false" src="HER.png" id="pin" />
+    <img draggable="false" src="hvor.årvoll.png" />
+</div>
+
 <body>
-
-    <img src="hvor.årvoll.png" />
-
-    <button>
-        pin_point
-    </button>
+    <p id="debug">
+    </p>
 </body>
 <style>
-    button {
+    body {
+        touch-action: none;
+    }
+
+    #pin {
         color: rgb(16, 187, 164);
         transition: all 1ms ease-out;
         position: absolute;
+        height: 50px;
+        width: auto;
     }
-    
+
     img {
         width: 100%;
         height: auto;
+        user-select: none;
     }
 </style>
 <script>
+    document.getElementById('share-btn').onclick = async function () {
+        const map = document.getElementById('map-container');
+        const canvas = await html2canvas(map);
+        canvas.toBlob(async function (blob) {
+            const file = new File([blob], "map.png", { type: "image/png" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Map Screenshot',
+                    text: 'Check out this map!'
+                });
+            } else {
+                // fallback: download the image
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'map.png';
+                a.click();
+                URL.revokeObjectURL(url);
+                alert('Sharing not supported. Image downloaded instead.');
+            }
+        });
+    };
+    // Store the handler so we can remove/add it
     function movemouse(e) {
-        console.error(e.clientX, e.clientY)
-        document.querySelector("button").style.top = e.clientY + "px"
-        document.querySelector("button").style.left = e.clientX + "px"
+        document.querySelector("#debug").innerHTML = "X: " + e.clientX + " Y: " + e.clientY
+        document.querySelector("#pin").style.top = e.clientY + "px"
+        document.querySelector("#pin").style.left = e.clientX + "px"
     }
-    document.addEventListener("mousemove", movemouse)
+    document.addEventListener("pointermove", movemouse);
+
+    document.getElementById('share-btn').onclick = async function () {
+        // Temporarily remove the pointermove event
+        document.removeEventListener("pointermove", movemouse);
+
+        const map = document.getElementById('map-container');
+        const canvas = await html2canvas(map);
+        canvas.toBlob(async function (blob) {
+            const file = new File([blob], "map.png", { type: "image/png" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Map Screenshot',
+                    text: 'Check out this map!'
+                }); a
+            } else {
+                // fallback: download the image
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'map.png';
+                a.click();
+                URL.revokeObjectURL(url);
+                alert('Sharing not supported. Image downloaded instead.');
+            }
+            // Re-enable pointermove after sharing/downloading
+            document.addEventListener("pointermove", movemouse);
+        });
+    };
+
     function sigmaohio() {
-        document.querySelector("button").style.scale = "200%"
+        document.querySelector("#pin").style.scale = "200%"
     }
-    document.querySelector("button").addEventListener("click", sigmaohio)
+    document.querySelector("#pin").addEventListener("click", sigmaohio)
+
+    function movemouse(e) {
+        document.querySelector("#debug").innerHTML = "X: " + e.clientX + " Y: " + e.clientY
+        console.error(e.clientX, e.clientY)
+        document.querySelector("#pin").style.top = e.clientY + "px"
+        document.querySelector("#pin").style.left = e.clientX + "px"
+    }
+    document.addEventListener("pointermove", movemouse)
+    function sigmaohio() {
+        document.querySelector("#pin").style.scale = "200%"
+    }
+    document.querySelector("#pin").addEventListener("click", sigmaohio)
 </script>
+
 </html>
