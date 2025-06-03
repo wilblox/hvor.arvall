@@ -51,7 +51,6 @@
                     text: 'Check out this map!'
                 });
             } else {
-                // fallback: download the image
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -62,16 +61,9 @@
             }
         });
     };
-    // Store the handler so we can remove/add it
-    function movemouse(e) {
-        document.querySelector("#debug").innerHTML = "X: " + e.clientX + " Y: " + e.clientY
-        document.querySelector("#pin").style.top = e.clientY + "px"
-        document.querySelector("#pin").style.left = e.clientX + "px"
-    }
     document.addEventListener("pointermove", movemouse);
 
     document.getElementById('share-btn').onclick = async function () {
-        // Temporarily remove the pointermove event
         document.removeEventListener("pointermove", movemouse);
 
         const map = document.getElementById('map-container');
@@ -85,7 +77,6 @@
                     text: 'Check out this map!'
                 }); a
             } else {
-                // fallback: download the image
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -94,7 +85,6 @@
                 URL.revokeObjectURL(url);
                 alert('Sharing not supported. Image downloaded instead.');
             }
-            // Re-enable pointermove after sharing/downloading
             document.addEventListener("pointermove", movemouse);
         });
     };
