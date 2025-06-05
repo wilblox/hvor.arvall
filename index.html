@@ -39,20 +39,31 @@
     }
 </style>
 <script>
-    let following = true;
+    
+let following = true;
 
-    document.addEventListener("pointermove", movemouse);
+function movemouse(e) {
+    document.querySelector("#debug").innerHTML = "X: " + e.clientX + " Y: " + e.clientY;
+    document.querySelector("#pin").style.top = e.clientY + "px";
+    document.querySelector("#pin").style.left = e.clientX + "px";
+}
+
+let lastMouseEvent = null;
+
+document.addEventListener("pointermove", function(e) {
+    lastMouseEvent = e;
+    if (following) movemouse(e);
+});
 
 document.addEventListener("click", function(e) {
     if (e.target.tagName.toLowerCase() !== "button") {
         following = !following;
         if (following) {
-            document.addEventListener("pointermove", movemouse);
-        } else {
-            document.removeEventListener("pointermove", movemouse);
+            if (lastMouseEvent) movemouse(lastMouseEvent);
         }
     }
 });
+
 
     document.querySelector("#pin").addEventListener("click", sigmaohio);
     document.getElementById('share-btn').onclick = async function () {
@@ -108,13 +119,7 @@ document.addEventListener("click", function(e) {
 
     document.querySelector("#pin").addEventListener("click", sigmaohio)
 
-    function movemouse(e) {
-        document.querySelector("#debug").innerHTML = "X: " + e.clientX + " Y: " + e.clientY
-        console.error(e.clientX, e.clientY)
-        document.querySelector("#pin").style.top = e.clientY + "px"
-        document.querySelector("#pin").style.left = e.clientX + "px"
-    }
-    document.addEventListener("pointermove", movemouse)
+
 </script>
 
 </html>
