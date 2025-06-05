@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 
-<button id="share-btn">Share Map Screenshot</button>
+<button id="share-btn">Share</button>
 
 <div id="map-container" style="position:relative; display:inline-block;">
     <img draggable="false" src="HER.png" id="pin" />
@@ -39,6 +39,22 @@
     }
 </style>
 <script>
+    let following = true;
+
+    document.addEventListener("pointermove", movemouse);
+
+document.addEventListener("click", function(e) {
+    if (e.target.tagName.toLowerCase() !== "button") {
+        following = !following;
+        if (following) {
+            document.addEventListener("pointermove", movemouse);
+        } else {
+            document.removeEventListener("pointermove", movemouse);
+        }
+    }
+});
+
+    document.querySelector("#pin").addEventListener("click", sigmaohio);
     document.getElementById('share-btn').onclick = async function () {
         const map = document.getElementById('map-container');
         const canvas = await html2canvas(map);
@@ -57,7 +73,7 @@
                 a.download = 'map.png';
                 a.click();
                 URL.revokeObjectURL(url);
-                alert('Sharing not supported. Image downloaded instead.');
+                alert('Sharing not supported. Image downloaded instead. make sure you have a browser that supports this feature.');
             }
         });
     };
@@ -89,9 +105,7 @@
         });
     };
 
-    function sigmaohio() {
-        document.querySelector("#pin").style.scale = "200%"
-    }
+
     document.querySelector("#pin").addEventListener("click", sigmaohio)
 
     function movemouse(e) {
@@ -101,10 +115,6 @@
         document.querySelector("#pin").style.left = e.clientX + "px"
     }
     document.addEventListener("pointermove", movemouse)
-    function sigmaohio() {
-        document.querySelector("#pin").style.scale = "200%"
-    }
-    document.querySelector("#pin").addEventListener("click", sigmaohio)
 </script>
 
 </html>
