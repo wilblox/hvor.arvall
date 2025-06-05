@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 
-<button id="share-btn">Share</button>
+<button id="share-btn" style="display:none;">Share</button>
 
 <div id="map-container" style="position:relative; display:inline-block;">
     <img draggable="false" src="HER.png" id="pin" />
@@ -24,11 +24,17 @@
         touch-action: none;
     }
 
+    #map-container {
+        position: relative;
+        display: inline-block;
+    }
+
     #pin {
-        color: rgb(16, 187, 164);
         position: absolute;
+        pointer-events: none;
         height: 75px;
         width: auto;
+        z-index: 10;
     }
 
     img {
@@ -39,52 +45,66 @@
 </style>
 <script>
 
-let following = true;
+    let following = true;
 
-function movemouse(e) {
-    document.querySelector("#debug").innerHTML = "X: " + Math.round(e.clientX) + " Y: " + Math.round(e.clientY);
-    document.querySelector("#pin").style.top = e.clientY + "px";
-    document.querySelector("#pin").style.left = e.clientX + "px";
-}
+    function movemouse(e) {
+        const pin = document.querySelector("#pin");
+        const pinRect = pin.getBoundingClientRect();
+        const mapRect = document.getElementById("map-container").getBoundingClientRect();
 
-let lastMouseEvent = null;
+        const x = e.clientX - mapRect.left - pinRect.width / 2;
+        const y = e.clientY - mapRect.top - pinRect.height / 0.5;
 
-document.addEventListener("pointermove", function(e) {
-    lastMouseEvent = e;
-    if (following) movemouse(e);
-});
+        document.querySelector("#debug").innerHTML = "X: " + Math.round(x) + " Y: " + Math.round(y);
+        pin.style.left = x + "px";
+        pin.style.top = y + "px";
+    }
 
-document.addEventListener("click", function(e) {
-    if (e.target.tagName.toLowerCase() !== "button") {
-        following = !following;
+    let lastMouseEvent = null;
+    let hasDragged = false;
+
+    document.addEventListener("pointermove", function (e) {
         if (following) {
-            if (lastMouseEvent) movemouse(lastMouseEvent);
+            movemouse(e);
+            hasDragged = true;
         }
     }
-});
+    );
 
-  document.getElementById('share-btn').onclick = async function () {
-    const map = document.getElementById('map-container');
-    const canvas = await html2canvas(map);
-    canvas.toBlob(async function (blob) {
-        const file = new File([blob], "map.png", { type: "image/png" });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-                files: [file],
-                title: 'Map Screenshot',
-                text: 'Check out this map!'
-            });
-        } else {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'map.png';
-            a.click();
-            URL.revokeObjectURL(url);
-            alert('Sharing not supported. Image downloaded instead. try a different browser.');
+    document.addEventListener("pointerup", function () {
+        if (following && hasDragged) {
+            document.getElementById("share-btn").style.display = "inline-block";
         }
+        following = false;
     });
-};
+
+    document.getElementById("map-container").addEventListener("pointerdown", function (e) {
+        if (e.target.id === "share-btn") return;
+        following = true;
+        movemouse(e);
+    });
+    document.getElementById('share-btn').onclick = async function () {
+        const map = document.getElementById('map-container');
+        const canvas = await html2canvas(map);
+        canvas.toBlob(async function (blob) {
+            const file = new File([blob], "map.png", { type: "image/png" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Map Screenshot',
+                    text: 'Check out this map!'
+                });
+            } else {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'map.png';
+                a.click();
+                URL.revokeObjectURL(url);
+                alert('Sharing not supported. Image downloaded instead. try a different browser.');
+            }
+        });
+    };
 
     document.querySelector("#pin").addEventListener("click", sigmaohio)
 
