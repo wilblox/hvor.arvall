@@ -26,9 +26,8 @@
 
     #pin {
         color: rgb(16, 187, 164);
-        transition: all 1ms ease-out;
         position: absolute;
-        height: 50px;
+        height: 75px;
         width: auto;
     }
 
@@ -39,11 +38,11 @@
     }
 </style>
 <script>
-    
+
 let following = true;
 
 function movemouse(e) {
-    document.querySelector("#debug").innerHTML = "X: " + e.clientX + " Y: " + e.clientY;
+    document.querySelector("#debug").innerHTML = "X: " + Math.round(e.clientX) + " Y: " + Math.round(e.clientY);
     document.querySelector("#pin").style.top = e.clientY + "px";
     document.querySelector("#pin").style.left = e.clientX + "px";
 }
@@ -64,61 +63,30 @@ document.addEventListener("click", function(e) {
     }
 });
 
-
-    document.querySelector("#pin").addEventListener("click", sigmaohio);
-    document.getElementById('share-btn').onclick = async function () {
-        const map = document.getElementById('map-container');
-        const canvas = await html2canvas(map);
-        canvas.toBlob(async function (blob) {
-            const file = new File([blob], "map.png", { type: "image/png" });
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                    files: [file],
-                    title: 'Map Screenshot',
-                    text: 'Check out this map!'
-                });
-            } else {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'map.png';
-                a.click();
-                URL.revokeObjectURL(url);
-                alert('Sharing not supported. Image downloaded instead. make sure you have a browser that supports this feature.');
-            }
-        });
-    };
-    document.addEventListener("pointermove", movemouse);
-
-    document.getElementById('share-btn').onclick = async function () {
-        document.removeEventListener("pointermove", movemouse);
-
-        const map = document.getElementById('map-container');
-        const canvas = await html2canvas(map);
-        canvas.toBlob(async function (blob) {
-            const file = new File([blob], "map.png", { type: "image/png" });
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                    files: [file],
-                    title: 'Map Screenshot',
-                    text: 'Check out this map!'
-                }); a
-            } else {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'map.png';
-                a.click();
-                URL.revokeObjectURL(url);
-                alert('Sharing not supported. Image downloaded instead.');
-            }
-            document.addEventListener("pointermove", movemouse);
-        });
-    };
-
+  document.getElementById('share-btn').onclick = async function () {
+    const map = document.getElementById('map-container');
+    const canvas = await html2canvas(map);
+    canvas.toBlob(async function (blob) {
+        const file = new File([blob], "map.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: 'Map Screenshot',
+                text: 'Check out this map!'
+            });
+        } else {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'map.png';
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('Sharing not supported. Image downloaded instead. try a different browser.');
+        }
+    });
+};
 
     document.querySelector("#pin").addEventListener("click", sigmaohio)
-
 
 </script>
 
