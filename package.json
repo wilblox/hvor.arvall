@@ -1,0 +1,24 @@
+{
+  "name": "hvor.arvall",
+  "version": "1.0.0",
+  "description": "im making a web cuz cool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wilblox/hvor.arvall.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wilblox/hvor.arvall/issues"
+  },
+  "homepage": "https://github.com/wilblox/hvor.arvall#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "puppeteer": "^24.10.0"
+  }
+}
