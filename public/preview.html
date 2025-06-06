@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #map-container {
+            position: relative;
+            width: 600px;
+            height: 400px;
+        }
+
+        #pin {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map-container">
+        <img id="map" src="hvor.årvoll.png" />
+        <img id="pin" src="HER.png" />
+    </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const pinx = parseInt(params.get('pinx') || 100, 10);
+        const piny = parseInt(params.get('piny') || 100, 10);
+        const pin = document.getElementById('pin');
+        pin.style.left = pinx + 'px';
+        pin.style.top = piny + 'px';
+    </script>
+</body>
+
+</html>
