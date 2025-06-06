@@ -6,19 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>årvoll</title>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 </head>
 
-<button id="share-btn" style="display:none;">Share</button>
-
-<div id="map-container" style="position:relative; display:inline-block;">
-    <img draggable="false" src="HER.png" id="pin" />
-    <img draggable="false" src="hvor.årvoll.png" />
-</div>
-
 <body>
-    <p id="debug">
-    </p>
+    <div id="map-container" style="position:relative; display:inline-block;">
+        <img draggable="false" src="HER.png" id="pin" />
+        <img draggable="false" src="hvor.årvoll.png" />
+    </div>
+    <button id="share-btn" class="">Share</button>
+    <p id="debug"></p>
 </body>
+
 <style>
     body {
         touch-action: none;
@@ -42,9 +41,30 @@
         height: auto;
         user-select: none;
     }
+
+    #share-btn {
+        display: block;
+        margin: 24px auto 0 auto;
+        padding: 32px 64px;
+        font-size: 2.5rem;
+        border-radius: 16px;
+        background: #16a87c;
+        color: white;
+        border: none;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(20px);
+        pointer-events: none;
+        transition: opacity 0.4s cubic-bezier(.4, 2, .6, 1), transform 0.4s cubic-bezier(.4, 2, .6, 1);
+    }
+
+    #share-btn.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
 </style>
 <script>
-
     let following = true;
 
     function movemouse(e) {
@@ -68,12 +88,12 @@
             movemouse(e);
             hasDragged = true;
         }
-    }
-    );
+    });
 
     document.addEventListener("pointerup", function () {
         if (following && hasDragged) {
-            document.getElementById("share-btn").style.display = "inline-block";
+            const btn = document.getElementById("share-btn");
+            btn.classList.add("visible");
         }
         following = false;
     });
@@ -82,31 +102,87 @@
         if (e.target.id === "share-btn") return;
         following = true;
         movemouse(e);
+        // Hide button when starting a new drag
+        const btn = document.getElementById("share-btn");
+        btn.classList.remove("visible");
     });
-    document.getElementById('share-btn').onclick = async function () {
-        const map = document.getElementById('map-container');
-        const canvas = await html2canvas(map);
-        canvas.toBlob(async function (blob) {
-            const file = new File([blob], "map.png", { type: "image/png" });
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                    files: [file],
-                    title: 'Map Screenshot',
-                    text: 'Check out this map!'
-                });
-            } else {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'map.png';
-                a.click();
-                URL.revokeObjectURL(url);
-                alert('Sharing not supported. Image downloaded instead. try a different browser.');
-            }
+
+    document.getElementById('share-btn').onclick = function () {
+        const pin = document.querySelector("#pin");
+        if (!pin) {
+            alert("Pin not found!");
+            return;
+        }
+        const left = Math.round(parseFloat(pin.style.left) || 0);
+        const top = Math.round(parseFloat(pin.style.top) || 0);
+        const url = `${location.origin}${location.pathname}?pinx=${left}&piny=${top}`;
+        navigator.clipboard.writeText(url).then(() => {
+            alert("Link copied! Share it with others.");
+        }, () => {
+            prompt("Copy this link:", url);
         });
     };
 
-    document.querySelector("#pin").addEventListener("click", sigmaohio)
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const pinx = params.get('pinx');
+        const piny = params.get('piny');
+        if (pinx !== null && piny !== null) {
+            const pin = document.querySelector("#pin");
+            pin.style.left = `${pinx}px`;
+            pin.style.top = `${piny}px`;
+            const btn = document.getElementById("share-btn");
+            btn.classList.add("visible");
+        }
+    });
+
+    // Share button functionality
+
+    document.getElementById('share-btn').onclick = function () {
+        const pin = document.querySelector("#pin");
+        if (!pin) {
+            alert("Pin not found!");
+            return;
+        }
+        const left = Math.round(parseFloat(pin.style.left) || 0);
+        const top = Math.round(parseFloat(pin.style.top) || 0);
+        const url = `${location.origin}${location.pathname}?pinx=${left}&piny=${top}`;
+
+        if (navigator.share) {
+            navigator.share({
+                title: "Map Pin",
+                text: "See my pin on the map!",
+                url: url
+            }).catch(() => {
+                fallbackCopy(url);
+            });
+            return;
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert("Link copied! Share it with others.");
+            }, () => {
+                fallbackCopy(url);
+            });
+        } else {
+            fallbackCopy(url);
+        }
+
+        function fallbackCopy(link) {
+            const input = document.createElement("input");
+            input.value = link;
+            document.body.appendChild(input);
+            input.select();
+            try {
+                document.execCommand("copy");
+                alert("Link copied! Share it with others.");
+            } catch (err) {
+                prompt("Copy this link:", link);
+            }
+            document.body.removeChild(input);
+        }
+    };
 
 </script>
 
