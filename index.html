@@ -11,7 +11,7 @@
 
 <body>
     <div id="map-container" style="position:relative; display:inline-block;">
-        <img draggable="false" src="pin_point.png" id="pin" />
+        <img draggable="false" src="pin_points.png" id="pin" />
         <img draggable="false" src="hvor.årvoll.png" />
     </div>
     <button id="share-btn" class="">Share</button>
@@ -34,7 +34,7 @@
     #pin {
         position: absolute;
         pointer-events: none;
-        height: 75px;
+        height: 80px;
         width: auto;
         z-index: 10;
         opacity: 0;
@@ -158,7 +158,6 @@
     });
 
     // Share button functionality
-
     document.getElementById('share-btn').onclick = function () {
         const pin = document.querySelector("#pin");
         if (!pin) {
