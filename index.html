@@ -11,7 +11,7 @@
 <body>
     <div id="map-container" style="position:relative; display:inline-block;">
         <img draggable="false" src="pin_points.png" id="pin" />
-        <img draggable="false" src="hvor.årvoll.png" />
+        <img draggable="false" src="hvor.årvoll.png" id="map-img" />
         <button id="share-btn" class="">Share</button>
     </div>
     <button id="share-btn" class="">Share</button>
@@ -31,10 +31,17 @@
         overflow: hidden;
     }
 
+    #map-img {
+        width: 100%;
+        height: 100%;
+        user-select: none;
+        display: block;
+    }
+
     #pin {
         position: absolute;
         pointer-events: none;
-        height: 80px;
+        height: 78px;
         width: auto;
         z-index: 10;
         opacity: 0;
@@ -43,12 +50,6 @@
 
     #pin.visible {
         opacity: 1;
-    }
-
-    img {
-        width: 110%;
-        height: auto;
-        user-select: none;
     }
 
     #share-btn {
@@ -97,9 +98,15 @@
 
     let lastMouseEvent = null;
     let hasDragged = false;
+    const pin = document.getElementById("pin");
+
+    if (!pin.complete) {
+        pin.onload = () => {
+        };
+    }
 
     document.getElementById("map-container").addEventListener("pointerdown", function (e) {
-        if (pinLocked) return; // <-- prevent drag if locked
+        if (pinLocked) return;
         if (e.target.id === "share-btn") return;
         following = true;
         movemouse(e);
@@ -109,7 +116,7 @@
     });
 
     document.addEventListener("pointermove", function (e) {
-        if (pinLocked) return; // <-- prevent drag if locked
+        if (pinLocked) return;
         if (following) {
             movemouse(e);
             hasDragged = true;
