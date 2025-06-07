@@ -77,6 +77,7 @@
 </style>
 <script>
     let following = true;
+    let pinLocked = false;
 
     function movemouse(e) {
         const pin = document.querySelector("#pin");
@@ -98,16 +99,17 @@
     let hasDragged = false;
 
     document.getElementById("map-container").addEventListener("pointerdown", function (e) {
+        if (pinLocked) return; // <-- prevent drag if locked
         if (e.target.id === "share-btn") return;
         following = true;
         movemouse(e);
         const btn = document.getElementById("share-btn");
         btn.classList.remove("visible");
-
         document.getElementById("pin").classList.add("visible");
     });
 
     document.addEventListener("pointermove", function (e) {
+        if (pinLocked) return; // <-- prevent drag if locked
         if (following) {
             movemouse(e);
             hasDragged = true;
@@ -115,6 +117,7 @@
     });
 
     document.addEventListener("pointerup", function () {
+        if (pinLocked) return; // <-- prevent drag if locked
         if (following && hasDragged) {
             const btn = document.getElementById("share-btn");
             btn.classList.add("visible");
@@ -157,6 +160,7 @@
             pin.classList.add("visible");
             const btn = document.getElementById("share-btn");
             btn.classList.add("visible");
+            pinLocked = true;
         }
     });
 
