@@ -47,13 +47,35 @@
         width: auto;
         z-index: 10;
         opacity: 0;
+        transform: translateY(-60px) scale(0.8);
         transition: opacity 0.2s, transform 0.4s cubic-bezier(.4, 2, .6, 1);
-        transform: translateY(-40px) scale(0.8);
     }
 
     #pin.visible {
         opacity: 1;
+        animation: pin-bounce 0.6s cubic-bezier(.4, 2, .6, 1);
         transform: translateY(0) scale(1);
+    }
+
+    @keyframes pin-bounce {
+        0% {
+            opacity: 0;
+            transform: translateY(-60px) scale(0.8);
+        }
+
+        60% {
+            opacity: 1;
+            transform: translateY(10px) scale(1.05);
+        }
+
+        80% {
+            transform: translateY(-6px) scale(0.97);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
 
     #share-btn,
@@ -143,6 +165,16 @@
         document.getElementById("share-btn").classList.remove("visible");
         document.getElementById("download-btn").classList.remove("visible");
         document.getElementById("pin").classList.add("visible");
+    });
+
+    document.getElementById("map-container").addEventListener("click", function (e) {
+        const mapRect = this.getBoundingClientRect();
+        const x = e.clientX - mapRect.left;
+        const y = e.clientY - mapRect.top;
+        if (x < 40 && y < 20) {
+            alert("You found the secret, dont share this with anyone!")
+                ;
+        }
     });
 
     document.addEventListener("pointermove", function (e) {
