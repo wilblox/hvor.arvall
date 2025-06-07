@@ -89,15 +89,12 @@
         const pinWidth = pinRect.width;
         const pinHeight = pinRect.height;
 
-        // Calculate the tip position relative to the map
         let tipX = e.clientX - mapRect.left;
         let tipY = e.clientY - mapRect.top;
 
-        // Clamp the tip so it stays inside the map
         tipX = Math.max(0, Math.min(tipX, mapRect.width));
         tipY = Math.max(0, Math.min(tipY, mapRect.height));
 
-        // Set the pin position so its tip is at (tipX, tipY)
         pin.style.left = (tipX - pinWidth / 2) + "px";
         pin.style.top = (tipY - pinHeight) + "px";
     }
