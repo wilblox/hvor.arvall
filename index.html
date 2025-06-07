@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>årvoll</title>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 </head>
 
 <body>
@@ -13,14 +14,43 @@
         <img draggable="false" src="pin_points.png" id="pin" />
         <img draggable="false" src="hvor.årvoll.png" id="map-img" />
         <button id="share-btn" class="">Share</button>
+        <button id="download-btn">Or download</button>
     </div>
-    <button id="share-btn" class="">Share</button>
     <button id="dark-toggle" style="position:fixed;top:16px;right:16px;z-index:100;">dark mode</button>
 </body>
 
 <style>
     body {
         touch-action: none;
+    }
+
+    #download-btn {
+        position: absolute;
+        bottom: 1px;
+        right: 1px;
+        padding: 16px 20px;
+        font-size: 1rem;
+        border-radius: 16px;
+        background: #16a87c;
+        color: white;
+        border: none;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateX(120px);
+        pointer-events: none;
+        transition: opacity 0.4s cubic-bezier(.4, 2, .6, 1), transform 0.5s cubic-bezier(.4, 2, .6, 1);
+        z-index: 20;
+    }
+
+    #download-btn.visible {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+    }
+
+    body.dark #download-btn {
+        background: #222;
+        color: #fff;
     }
 
     body.dark {
@@ -145,6 +175,7 @@
         if (following && hasDragged) {
             const btn = document.getElementById("share-btn");
             btn.classList.add("visible");
+            document.getElementById("download-btn").classList.add("visible"); // <-- add this line
         }
         following = false;
     });
@@ -230,6 +261,27 @@
     document.getElementById('dark-toggle').onclick = function () {
         document.body.classList.toggle('dark');
     };
+
+    // Download functionality
+
+    document.getElementById('download-btn').onclick = function () {
+        const shareBtn = document.getElementById('share-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        shareBtn.style.visibility = 'hidden';
+        downloadBtn.style.visibility = 'hidden';
+
+        const map = document.getElementById('map-container');
+        html2canvas(map).then(canvas => {
+            shareBtn.style.visibility = '';
+            downloadBtn.style.visibility = '';
+
+            const link = document.createElement('a');
+            link.download = 'map.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    };
+
 </script>
 
 </html>
