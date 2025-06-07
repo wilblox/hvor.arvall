@@ -41,7 +41,7 @@
     #pin {
         position: absolute;
         pointer-events: none;
-        height: 78px;
+        height: 50px;
         width: auto;
         z-index: 10;
         opacity: 0;
@@ -81,29 +81,30 @@
     let pinLocked = false;
 
     function movemouse(e) {
-        const pin = document.querySelector("#pin");
+        const pin = document.getElementById("pin");
         const pinRect = pin.getBoundingClientRect();
         const map = document.getElementById("map-container");
         const mapRect = map.getBoundingClientRect();
 
-        let x = e.clientX - mapRect.left - pinRect.width / 2;
-        let y = e.clientY - mapRect.top - pinRect.height / 0.5;
+        const pinWidth = pinRect.width;
+        const pinHeight = pinRect.height;
 
-        x = Math.max(0, Math.min(x, mapRect.width - pinRect.width));
-        y = Math.max(0, Math.min(y, mapRect.height - pinRect.height));
+        // Calculate the tip position relative to the map
+        let tipX = e.clientX - mapRect.left;
+        let tipY = e.clientY - mapRect.top;
 
-        pin.style.left = x + "px";
-        pin.style.top = y + "px";
+        // Clamp the tip so it stays inside the map
+        tipX = Math.max(0, Math.min(tipX, mapRect.width));
+        tipY = Math.max(0, Math.min(tipY, mapRect.height));
+
+        // Set the pin position so its tip is at (tipX, tipY)
+        pin.style.left = (tipX - pinWidth / 2) + "px";
+        pin.style.top = (tipY - pinHeight) + "px";
     }
 
     let lastMouseEvent = null;
     let hasDragged = false;
     const pin = document.getElementById("pin");
-
-    if (!pin.complete) {
-        pin.onload = () => {
-        };
-    }
 
     document.getElementById("map-container").addEventListener("pointerdown", function (e) {
         if (pinLocked) return;
