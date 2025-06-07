@@ -117,20 +117,12 @@
     });
 
     document.addEventListener("pointerup", function () {
-        if (pinLocked) return; // <-- prevent drag if locked
+        if (pinLocked) return;
         if (following && hasDragged) {
             const btn = document.getElementById("share-btn");
             btn.classList.add("visible");
         }
         following = false;
-    });
-
-    document.getElementById("map-container").addEventListener("pointerdown", function (e) {
-        if (e.target.id === "share-btn") return;
-        following = true;
-        movemouse(e);
-        const btn = document.getElementById("share-btn");
-        btn.classList.remove("visible");
     });
 
     document.getElementById('share-btn').onclick = function () {
