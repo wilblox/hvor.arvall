@@ -27,7 +27,7 @@
         position: relative;
         display: inline-block;
         width: 420px;
-        height: 531px;
+        height: 600px;
         overflow: hidden;
     }
 
@@ -85,7 +85,6 @@
         const pinRect = pin.getBoundingClientRect();
         const map = document.getElementById("map-container");
         const mapRect = map.getBoundingClientRect();
-        const offsetAboveTip = -pinRect.height / 2;
 
         const pinWidth = pinRect.width;
         const pinHeight = pinRect.height;
@@ -97,7 +96,7 @@
         tipY = Math.max(0, Math.min(tipY, mapRect.height));
 
         pin.style.left = (tipX - pinWidth / 2) + "px";
-        pin.style.top = (tipY - pinHeight + offsetAboveTip) + "px";
+        pin.style.top = (tipY - pinHeight / 0.5) + "px";
     }
 
     let lastMouseEvent = null;
