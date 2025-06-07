@@ -3,10 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=420, initial-scale=1.0">
     <title>årvoll</title>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
 </head>
 
 <body>
@@ -14,7 +13,7 @@
         <img draggable="false" src="pin_points.png" id="pin" />
         <img draggable="false" src="hvor.årvoll.png" id="map-img" />
         <button id="share-btn" class="">Share</button>
-        <button id="download-btn">Or download</button>
+        <button id="download-btn" class="">Or Download</button>
     </div>
     <button id="dark-toggle" style="position:fixed;top:16px;right:16px;z-index:100;">dark mode</button>
 </body>
@@ -22,50 +21,6 @@
 <style>
     body {
         touch-action: none;
-    }
-
-    #download-btn {
-        position: absolute;
-        bottom: 1px;
-        right: 1px;
-        padding: 16px 20px;
-        font-size: 1rem;
-        border-radius: 16px;
-        background: #16a87c;
-        color: white;
-        border: none;
-        cursor: pointer;
-        opacity: 0;
-        transform: translateX(120px);
-        pointer-events: none;
-        transition: opacity 0.4s cubic-bezier(.4, 2, .6, 1), transform 0.5s cubic-bezier(.4, 2, .6, 1);
-        z-index: 20;
-    }
-
-    #download-btn.visible {
-        opacity: 1;
-        transform: translateX(0);
-        pointer-events: auto;
-    }
-
-    body.dark #download-btn {
-        background: #222;
-        color: #fff;
-    }
-
-    body.dark {
-        background: #181a1b;
-        color: #eee;
-    }
-
-    body.dark #map-container {
-        border-color: #444;
-        background: #222;
-    }
-
-    body.dark #share-btn {
-        background: #222;
-        color: #fff;
     }
 
     #map-container {
@@ -98,13 +53,13 @@
 
     #pin.visible {
         opacity: 1;
-        transition: translateY(0) scale(1);
+        transform: translateY(0) scale(1);
     }
 
-    #share-btn {
+    #share-btn,
+    #download-btn {
         position: absolute;
         bottom: 24px;
-        right: 24px;
         padding: 24px 48px;
         font-size: 2rem;
         border-radius: 16px;
@@ -119,12 +74,41 @@
         z-index: 20;
     }
 
-    #share-btn.visible {
+    #share-btn {
+        right: 24px;
+    }
+
+    #download-btn {
+        padding: 16px 30px;
+        right: 1px;
+        font-size: 1rem;
+        bottom: 1px;
+    }
+
+    #share-btn.visible,
+    #download-btn.visible {
         opacity: 1;
         transform: translateX(0);
         pointer-events: auto;
     }
+
+    body.dark {
+        background: #181a1b;
+        color: #eee;
+    }
+
+    body.dark #map-container {
+        border-color: #444;
+        background: #222;
+    }
+
+    body.dark #share-btn,
+    body.dark #download-btn {
+        background: #222;
+        color: #fff;
+    }
 </style>
+
 <script>
     let following = true;
     let pinLocked = false;
@@ -150,15 +134,14 @@
 
     let lastMouseEvent = null;
     let hasDragged = false;
-    const pin = document.getElementById("pin");
 
     document.getElementById("map-container").addEventListener("pointerdown", function (e) {
         if (pinLocked) return;
-        if (e.target.id === "share-btn") return;
+        if (e.target.id === "share-btn" || e.target.id === "download-btn") return;
         following = true;
         movemouse(e);
-        const btn = document.getElementById("share-btn");
-        btn.classList.remove("visible");
+        document.getElementById("share-btn").classList.remove("visible");
+        document.getElementById("download-btn").classList.remove("visible");
         document.getElementById("pin").classList.add("visible");
     });
 
@@ -173,13 +156,13 @@
     document.addEventListener("pointerup", function () {
         if (pinLocked) return;
         if (following && hasDragged) {
-            const btn = document.getElementById("share-btn");
-            btn.classList.add("visible");
-            document.getElementById("download-btn").classList.add("visible"); // <-- add this line
+            document.getElementById("share-btn").classList.add("visible");
+            document.getElementById("download-btn").classList.add("visible");
         }
         following = false;
     });
 
+    // Share button functionality
     document.getElementById('share-btn').onclick = function () {
         const pin = document.querySelector("#pin");
         if (!pin) {
@@ -196,74 +179,7 @@
         });
     };
 
-    window.addEventListener('DOMContentLoaded', () => {
-        const params = new URLSearchParams(window.location.search);
-        const pinx = params.get('pinx');
-        const piny = params.get('piny');
-        if (pinx !== null && piny !== null) {
-            const pin = document.querySelector("#pin");
-            pin.style.left = `${pinx}px`;
-            pin.style.top = `${piny}px`;
-            pin.classList.add("visible");
-            const btn = document.getElementById("share-btn");
-            btn.style.display = "none";
-            pinLocked = true;
-        }
-    });
-
-    // Share button functionality
-    document.getElementById('share-btn').onclick = function () {
-        const pin = document.querySelector("#pin");
-        if (!pin) {
-            alert("Pin not found!");
-            return;
-        }
-        const left = Math.round(parseFloat(pin.style.left) || 0);
-        const top = Math.round(parseFloat(pin.style.top) || 0);
-        const url = `${location.origin}${location.pathname}?pinx=${left}&piny=${top}`;
-
-        if (navigator.share) {
-            navigator.share({
-                title: "Map Pin",
-                text: "Im sitting here!",
-                url: url
-            }).catch(() => {
-                fallbackCopy(url);
-            });
-            return;
-        }
-
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(url).then(() => {
-                alert("Link copied! Share it with others.");
-            }, () => {
-                fallbackCopy(url);
-            });
-        } else {
-            fallbackCopy(url);
-        }
-
-        function fallbackCopy(link) {
-            const input = document.createElement("input");
-            input.value = link;
-            document.body.appendChild(input);
-            input.select();
-            try {
-                document.execCommand("copy");
-                alert("Link copied! Share it with others.");
-            } catch (err) {
-                prompt("Copy this link:", link);
-            }
-            document.body.removeChild(input);
-        }
-    };
-    // Dark mode toggle
-    document.getElementById('dark-toggle').onclick = function () {
-        document.body.classList.toggle('dark');
-    };
-
     // Download functionality
-
     document.getElementById('download-btn').onclick = function () {
         const shareBtn = document.getElementById('share-btn');
         const downloadBtn = document.getElementById('download-btn');
@@ -282,6 +198,27 @@
         });
     };
 
+    // Dark mode toggle
+    document.getElementById('dark-toggle').onclick = function () {
+        document.body.classList.toggle('dark');
+    };
+
+    // On load: handle shared link
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const pinx = params.get('pinx');
+        const piny = params.get('piny');
+        if (pinx !== null && piny !== null) {
+            const pin = document.querySelector("#pin");
+            pin.style.left = `${pinx}px`;
+            pin.style.top = `${piny}px`;
+            pin.classList.add("visible");
+            document.getElementById("download-btn").classList.add("visible");
+            const btn = document.getElementById("share-btn");
+            btn.style.display = "none";
+            pinLocked = true;
+        }
+    });
 </script>
 
 </html>
