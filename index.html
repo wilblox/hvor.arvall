@@ -15,12 +15,27 @@
         <button id="share-btn" class="">Share</button>
     </div>
     <button id="share-btn" class="">Share</button>
-
+    <button id="dark-toggle" style="position:fixed;top:16px;right:16px;z-index:100;">dark mode</button>
 </body>
 
 <style>
     body {
         touch-action: none;
+    }
+
+    body.dark {
+        background: #181a1b;
+        color: #eee;
+    }
+
+    body.dark #map-container {
+        border-color: #444;
+        background: #222;
+    }
+
+    body.dark #share-btn {
+        background: #222;
+        color: #fff;
     }
 
     #map-container {
@@ -47,11 +62,13 @@
         width: auto;
         z-index: 10;
         opacity: 0;
+        transition: opacity 0.2s, transform 0.4s cubic-bezier(.4, 2, .6, 1);
+        transform: translateY(-40px) scale(0.8);
     }
 
     #pin.visible {
         opacity: 1;
-        transition: opacity 0.2s, transform 0.2s;
+        transition: translateY(0) scale(1);
     }
 
     #share-btn {
@@ -177,7 +194,7 @@
         if (navigator.share) {
             navigator.share({
                 title: "Map Pin",
-                text: "See my pin on the map!",
+                text: "Im sitting here!",
                 url: url
             }).catch(() => {
                 fallbackCopy(url);
@@ -208,6 +225,10 @@
             }
             document.body.removeChild(input);
         }
+    };
+    // Dark mode toggle
+    document.getElementById('dark-toggle').onclick = function () {
+        document.body.classList.toggle('dark');
     };
 </script>
 
