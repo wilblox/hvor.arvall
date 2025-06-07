@@ -62,9 +62,9 @@
         border: none;
         cursor: pointer;
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(120px);
         pointer-events: none;
-        transition: opacity 0.4s cubic-bezier(.4, 2, .6, 1), transform 0.4s cubic-bezier(.4, 2, .6, 1);
+        transition: opacity 0.4s cubic-bezier(.4, 2, .6, 1), transform 0.5s cubic-bezier(.4, 2, .6, 1);
     }
 
     #share-btn.visible {
@@ -75,7 +75,6 @@
 </style>
 <script>
     let following = true;
-
 
     function movemouse(e) {
         const pin = document.querySelector("#pin");
@@ -102,7 +101,7 @@
         movemouse(e);
         const btn = document.getElementById("share-btn");
         btn.classList.remove("visible");
-        // Show the pin when dragging starts
+
         document.getElementById("pin").classList.add("visible");
     });
 
@@ -205,7 +204,6 @@
             document.body.removeChild(input);
         }
     };
-
 </script>
 
 </html>
