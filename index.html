@@ -96,7 +96,7 @@
         tipY = Math.max(0, Math.min(tipY, mapRect.height));
 
         pin.style.left = (tipX - pinWidth / 2) + "px";
-        pin.style.top = (tipY - pinHeight) + "px";
+        pin.style.top = (tipY - pinHeight / 0.5) + "px";
     }
 
     let lastMouseEvent = null;
