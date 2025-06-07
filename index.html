@@ -12,6 +12,7 @@
     <div id="map-container" style="position:relative; display:inline-block;">
         <img draggable="false" src="pin_points.png" id="pin" />
         <img draggable="false" src="hvor.årvoll.png" />
+        <button id="share-btn" class="">Share</button>
     </div>
     <button id="share-btn" class="">Share</button>
 
@@ -51,24 +52,26 @@
     }
 
     #share-btn {
-        display: block;
-        margin: 24px auto 0 auto;
-        padding: 32px 64px;
-        font-size: 2.5rem;
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        padding: 24px 48px;
+        font-size: 2rem;
         border-radius: 16px;
         background: #16a87c;
         color: white;
         border: none;
         cursor: pointer;
         opacity: 0;
-        transform: translateY(120px);
+        transform: translateX(120px);
         pointer-events: none;
         transition: opacity 0.4s cubic-bezier(.4, 2, .6, 1), transform 0.5s cubic-bezier(.4, 2, .6, 1);
+        z-index: 20;
     }
 
     #share-btn.visible {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
         pointer-events: auto;
     }
 </style>
