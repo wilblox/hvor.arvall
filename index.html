@@ -245,9 +245,8 @@
             pin.style.left = `${pinx}px`;
             pin.style.top = `${piny}px`;
             pin.classList.add("visible");
-            document.getElementById("download-btn").classList.add("visible");
-            const btn = document.getElementById("share-btn");
-            btn.style.display = "none";
+            document.getElementById("download-btn").style.display = "none";
+            document.getElementById("share-btn").style.display = "none";
             pinLocked = true;
         }
     });
