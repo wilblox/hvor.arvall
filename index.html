@@ -202,7 +202,7 @@
         });
     };
 
-    // On load: handle shared link
+    //handle shared link
     window.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams(window.location.search);
         const pinx = params.get('pinx');
@@ -250,7 +250,6 @@
                 inner.style.width = width + 'vw';
                 setTimeout(animate, 200 + Math.random() * 400);
             } else {
-                // Never finish
                 width = 80;
                 inner.style.width = width + 'vw';
                 setTimeout(animate, 1000);
@@ -258,7 +257,6 @@
         }
         animate();
     }
-    // Start the useless loading bar after 2 seconds
     setTimeout(startUselessLoading, 2000);
 </script>
 
