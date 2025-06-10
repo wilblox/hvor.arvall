@@ -16,7 +16,6 @@
         <img draggable="false" src="pin_points.png" id="pin" />
         <img draggable="false" src="hvor.årvoll.png" id="map-img" />
         <button id="share-btn" class="">Share</button>
-        <button id="download-btn" class="">Or Download</button>
     </div>
 </body>
 
@@ -80,8 +79,7 @@
         }
     }
 
-    #share-btn,
-    #download-btn {
+    #share-btn {
         position: absolute;
         bottom: 24px;
         padding: 24px 48px;
@@ -96,21 +94,10 @@
         pointer-events: none;
         transition: opacity 0.4s cubic-bezier(.4, 2, .6, 1), transform 0.5s cubic-bezier(.4, 2, .6, 1);
         z-index: 20;
-    }
-
-    #share-btn {
         right: 24px;
     }
 
-    #download-btn {
-        padding: 16px 30px;
-        right: 1px;
-        font-size: 1rem;
-        bottom: 1px;
-    }
-
-    #share-btn.visible,
-    #download-btn.visible {
+    #share-btn.visible {
         opacity: 1;
         transform: translateX(0);
         pointer-events: auto;
@@ -145,11 +132,10 @@
 
     document.getElementById("map-container").addEventListener("pointerdown", function (e) {
         if (pinLocked) return;
-        if (e.target.id === "share-btn" || e.target.id === "download-btn") return;
+        if (e.target.id === "share-btn") return;
         following = true;
         movemouse(e);
         document.getElementById("share-btn").classList.remove("visible");
-        document.getElementById("download-btn").classList.remove("visible");
         document.getElementById("pin").classList.add("visible");
     });
 
@@ -175,7 +161,6 @@
         if (pinLocked) return;
         if (following && hasDragged) {
             document.getElementById("share-btn").classList.add("visible");
-            document.getElementById("download-btn").classList.add("visible");
         }
         following = false;
     });
@@ -193,15 +178,11 @@
 
         // Hide buttons before screenshot
         const shareBtn = document.getElementById('share-btn');
-        const downloadBtn = document.getElementById('download-btn');
         shareBtn.style.visibility = 'hidden';
-        downloadBtn.style.visibility = 'hidden';
 
         const map = document.getElementById('map-container');
         html2canvas(map).then(async canvas => {
-            // Show buttons again
             shareBtn.style.visibility = '';
-            downloadBtn.style.visibility = '';
 
             canvas.toBlob(async function (blob) {
                 const file = new File([blob], "map.png", { type: "image/png" });
@@ -215,25 +196,6 @@
         });
     };
 
-    // Download functionality
-    document.getElementById('download-btn').onclick = function () {
-        const shareBtn = document.getElementById('share-btn');
-        const downloadBtn = document.getElementById('download-btn');
-        shareBtn.style.visibility = 'hidden';
-        downloadBtn.style.visibility = 'hidden';
-
-        const map = document.getElementById('map-container');
-        html2canvas(map).then(canvas => {
-            shareBtn.style.visibility = '';
-            downloadBtn.style.visibility = '';
-
-            const link = document.createElement('a');
-            link.download = 'map.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        });
-    };
-
     // On load: handle shared link
     window.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams(window.location.search);
@@ -244,13 +206,12 @@
             pin.style.left = `${pinx}px`;
             pin.style.top = `${piny}px`;
             pin.classList.add("visible");
-            document.getElementById("download-btn").style.display = "none";
             document.getElementById("share-btn").style.display = "none";
             pinLocked = true;
         }
     });
 
-    // Error overlay logic
+    // Error overlay
     (function () {
         const overlay = document.getElementById('error-overlay');
         function showError(msg) {
