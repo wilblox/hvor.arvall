@@ -9,6 +9,9 @@
 </head>
 
 <body>
+    <div id="error-overlay"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; z-index:9999; background:rgba(200,0,0,0.9); color:white; font-size:1rem; padding:16px; text-align:left; pointer-events:auto; max-height:40vh; overflow:auto;">
+    </div>
     <div id="map-container" style="position:relative; display:inline-block;">
         <img draggable="false" src="pin_points.png" id="pin" />
         <img draggable="false" src="hvor.årvoll.png" id="map-img" />
@@ -178,7 +181,7 @@
     });
 
     // Share button functionality
-    document.getElementById('share-btn').onclick = function () {
+    document.getElementById('share-btn').onclick = async function () {
         const pin = document.querySelector("#pin");
         if (!pin) {
             alert("Pin not found!");
@@ -187,10 +190,28 @@
         const left = Math.round(parseFloat(pin.style.left) || 0);
         const top = Math.round(parseFloat(pin.style.top) || 0);
         const url = `${location.origin}${location.pathname}?pinx=${left}&piny=${top}`;
-        navigator.clipboard.writeText(url).then(() => {
-            alert("Link copied! Share it with others.");
-        }, () => {
-            prompt("Copy this link:", url);
+
+        // Hide buttons before screenshot
+        const shareBtn = document.getElementById('share-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        shareBtn.style.visibility = 'hidden';
+        downloadBtn.style.visibility = 'hidden';
+
+        const map = document.getElementById('map-container');
+        html2canvas(map).then(async canvas => {
+            // Show buttons again
+            shareBtn.style.visibility = '';
+            downloadBtn.style.visibility = '';
+
+            canvas.toBlob(async function (blob) {
+                const file = new File([blob], "map.png", { type: "image/png" });
+                await navigator.share({
+                    files: [file],
+                    title: "My map pin",
+                    text: "Check out my pin! " + url
+                });
+                return;
+            }, "image/png");
         });
     };
 
@@ -228,6 +249,27 @@
             pinLocked = true;
         }
     });
+
+    // Error overlay logic
+    (function () {
+        const overlay = document.getElementById('error-overlay');
+        function showError(msg) {
+            overlay.style.display = 'block';
+            overlay.textContent = msg;
+        }
+        const origConsoleError = console.error;
+        console.error = function (...args) {
+            origConsoleError.apply(console, args);
+            showError(args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
+        };
+        window.addEventListener('error', function (e) {
+            showError(e.message + (e.filename ? ('\n' + e.filename + ':' + e.lineno) : ''));
+        });
+        window.addEventListener('unhandledrejection', function (e) {
+            showError('Unhandled promise rejection: ' + (e.reason && e.reason.message ? e.reason.message : e.reason));
+        });
+        overlay.onclick = function () { overlay.style.display = 'none'; };
+    })();
 </script>
 
 </html>

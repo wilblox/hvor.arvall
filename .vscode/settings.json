@@ -1,0 +1,9 @@
+{
+    "liveServer.settings.root": "/",
+    "liveServer.settings.https": {
+        "enable": true,
+        "cert": "/home/crabby/Documents/GitHub/hvor.arvall/live-server-cert.pem",
+        "key": "/home/crabby/Documents/GitHub/hvor.arvall/live-server-key.pem",
+        "passphrase": ""
+    }
+}
