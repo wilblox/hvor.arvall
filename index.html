@@ -23,11 +23,27 @@
             style="height:100%;width:0;background:linear-gradient(90deg,#16a87c,#f39c12,#e74c3c,#16a87c);transition:width 0.5s;">
         </div>
     </div>
+    <video id="corner-video" src="subway_surfers.mp4" autoplay loop muted playsinline></video>
+
 </body>
 
 <style>
     body {
         touch-action: none;
+    }
+
+    #corner-video {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        width: 220px;
+        height: 124px;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0.85;
+        background: #000;
     }
 
     #map-container {
