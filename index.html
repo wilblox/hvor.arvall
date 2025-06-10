@@ -17,6 +17,12 @@
         <img draggable="false" src="hvor.årvoll.png" id="map-img" />
         <button id="share-btn" class="">Share</button>
     </div>
+    <div id="useless-loading-bar"
+        style="position:fixed;top:0;left:0;width:100vw;height:6px;background:#eee;z-index:9998;display:none;">
+        <div id="useless-loading-inner"
+            style="height:100%;width:0;background:linear-gradient(90deg,#16a87c,#f39c12,#e74c3c,#16a87c);transition:width 0.5s;">
+        </div>
+    </div>
 </body>
 
 <style>
@@ -231,6 +237,29 @@
         });
         overlay.onclick = function () { overlay.style.display = 'none'; };
     })();
+
+    // Useless loading bar feature
+    function startUselessLoading() {
+        const bar = document.getElementById('useless-loading-bar');
+        const inner = document.getElementById('useless-loading-inner');
+        bar.style.display = 'block';
+        let width = 0;
+        function animate() {
+            if (width < 99) {
+                width += Math.random() * 2;
+                inner.style.width = width + 'vw';
+                setTimeout(animate, 200 + Math.random() * 400);
+            } else {
+                // Never finish
+                width = 80;
+                inner.style.width = width + 'vw';
+                setTimeout(animate, 1000);
+            }
+        }
+        animate();
+    }
+    // Start the useless loading bar after 2 seconds
+    setTimeout(startUselessLoading, 2000);
 </script>
 
 </html>
