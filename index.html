@@ -30,100 +30,99 @@
 <style>
     body {
         touch-action: none;
-    }
 
-    #corner-video {
-        position: fixed;
-        bottom: 16px;
-        right: 16px;
-        width: 220px;
-        height: 124px;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        z-index: 9999;
-        pointer-events: none;
-        opacity: 0.85;
-        background: #000;
-    }
+        #corner-video {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            width: 220px;
+            height: 124px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.85;
+            background: #000;
+        }
 
-    #map-container {
-        position: relative;
-        display: inline-block;
-        width: 420px;
-        height: 531px;
-        border: 1px solid #ccc;
-        border-radius: 16px;
-        overflow: hidden;
-    }
+        #map-container {
+            position: relative;
+            display: inline-block;
+            width: 420px;
+            height: 531px;
+            border: 1px solid #ccc;
+            border-radius: 16px;
+            overflow: hidden;
+        }
 
-    #map-img {
-        width: 100%;
-        height: 100%;
-        user-select: none;
-        display: block;
-    }
+        #map-img {
+            width: 100%;
+            height: 100%;
+            user-select: none;
+            display: block;
+        }
 
-    #pin {
-        position: absolute;
-        pointer-events: none;
-        height: 50px;
-        width: auto;
-        z-index: 10;
-        opacity: 0;
-        transform: translateY(-60px) scale(0.8);
-        transition: opacity 0.2s, transform 0.4s cubic-bezier(.4, 2, .6, 1);
-    }
-
-    #pin.visible {
-        opacity: 1;
-        animation: pin-bounce 0.6s cubic-bezier(.4, 2, .6, 1);
-        transform: translateY(0) scale(1);
-    }
-
-    @keyframes pin-bounce {
-        0% {
+        #pin {
+            position: absolute;
+            pointer-events: none;
+            height: 50px;
+            width: auto;
+            z-index: 10;
             opacity: 0;
             transform: translateY(-60px) scale(0.8);
+            transition: opacity 0.2s, transform 0.4s cubic-bezier(.4, 2, .6, 1);
         }
 
-        60% {
+        #pin.visible {
             opacity: 1;
-            transform: translateY(10px) scale(1.05);
-        }
-
-        80% {
-            transform: translateY(-6px) scale(0.97);
-        }
-
-        100% {
-            opacity: 1;
+            animation: pin-bounce 0.6s cubic-bezier(.4, 2, .6, 1);
             transform: translateY(0) scale(1);
         }
-    }
 
-    #share-btn {
-        position: absolute;
-        bottom: 24px;
-        padding: 24px 48px;
-        font-size: 2rem;
-        border-radius: 16px;
-        background: #16a87c;
-        color: white;
-        border: none;
-        cursor: pointer;
-        opacity: 0;
-        transform: translateX(120px);
-        pointer-events: none;
-        transition: opacity 0.4s cubic-bezier(.4, 2, .6, 1), transform 0.5s cubic-bezier(.4, 2, .6, 1);
-        z-index: 20;
-        right: 24px;
-    }
+        @keyframes pin-bounce {
+            0% {
+                opacity: 0;
+                transform: translateY(-60px) scale(0.8);
+            }
 
-    #share-btn.visible {
-        opacity: 1;
-        transform: translateX(0);
-        pointer-events: auto;
-    }
+            60% {
+                opacity: 1;
+                transform: translateY(10px) scale(1.05);
+            }
+
+            80% {
+                transform: translateY(-6px) scale(0.97);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        #share-btn {
+            position: absolute;
+            bottom: 24px;
+            padding: 24px 48px;
+            font-size: 2rem;
+            border-radius: 16px;
+            background: #16a87c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateX(120px);
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(.4, 2, .6, 1), transform 0.5s cubic-bezier(.4, 2, .6, 1);
+            z-index: 20;
+            right: 24px;
+        }
+
+        #share-btn.visible {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
 </style>
 
 <script>
